@@ -6,8 +6,19 @@ const app = express();
 //firing middleware, common in parameter logs basic data
 app.use(morgan('common'));
 
+let topMovies = [
+    {
+        title: 'Good Will Hunting'
+    },
+    {
+        title: 'Sabrina'
+    },
+    {
+        title: 'Forrest Gump'
+    },
+]
 // GET requests
-//json because an API will be here eventually.
+//stand in
 app.get('/movies', (req, res) => {
     res.json(topMovies);
 });
