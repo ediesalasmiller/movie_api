@@ -23,7 +23,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          return all movies
+          return all movies in API in a list
         </div>
         <div class="col-sm">
           http://localhost:8080/movies
@@ -49,10 +49,10 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          return data about a genre
+          return data about a genre by name/title
         </div>
         <div class="col-sm">
-          http://localhost:8080/movies/genres
+          http://localhost:8080/movies/genres/:title?
         </div>
         <div class="col-sm">
           GET
@@ -62,7 +62,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          return data about a director
+          return data about a director by name
         </div>
         <div class="col-sm">
           http://localhost:8080/movies/directors/:name?
@@ -75,7 +75,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          add new user
+          create a new user profile
         </div>
         <div class="col-sm">
           http://localhost:8080/account/newuser
@@ -88,7 +88,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          update information
+          update information for user profile
         </div>
         <div class="col-sm">
           http://localhost:8080/account/update
@@ -101,7 +101,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          add movie to favorites
+          add movie to favorites in user profile
         </div>
         <div class="col-sm">
           http://localhost:8080/account/favorites/:title?
@@ -114,7 +114,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          remove movie from favorites
+          remove movie from favorites in user profile
         </div>
         <div class="col-sm">
           http://localhost:8080/account/favorites/:name?
@@ -127,7 +127,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          deactivate account
+          deactivate user profile
         </div>
         <div class="col-sm">
           http://localhost:8080/account/update/deactivate/:user?
