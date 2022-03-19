@@ -67,9 +67,9 @@ app.get('/movies/:title', (req, res) => {
     }
 });
 
-app.get('/movies/:genre', (req, res) => {
-    const { genre } = req.params;
-    const genre = movies.find( movie => movie.genre === genre).genre //this .genre at the end makes it so it ONLY returns genre information
+app.get('/movies/genre/:genreName', (req, res) => {
+    const { genreName } = req.params;
+    const genre = movies.find( movie => movie.genre === genreName ).genre //this .genre at the end makes it so it ONLY returns genre information
     
     if (genre) { 
         res.status(200).json(genre);
@@ -78,8 +78,15 @@ app.get('/movies/:genre', (req, res) => {
     }
 });
 
-app.get('/movies/:director', (req, res) => {
-    res.send('This is the director of the movie');
+app.get('/movies/directors/:directorName', (req, res) => {
+    const { directorName } = req.params;
+    const director = movies.find( movie => movie.director === directorName ).director //this .genre at the end makes it so it ONLY returns genre information
+    
+    if (director) { 
+        res.status(200).json(director);
+    }else{
+        res.status(400).send('director not found')
+    }
 });
 
 app.post('/account/newuser', (req, res) => {
