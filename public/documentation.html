@@ -22,47 +22,42 @@ table, th, td {
   </tr>
   <tr>
     <td>Return data about a single movie</td>
-    <td>http://localhost:8080/movies/title</td>
+    <td>http://localhost:8080/movies/:title</td>
     <td>GET</td>
   </tr>
   <tr>
     <td>return data about a genre by name/title</td>
-    <td>http://localhost:8080/movies/genres/:title?</td>
+    <td>http://localhost:8080/movies/genre/:genreName</td>
     <td>GET</td>
   </tr>
   <tr>
     <td>return data about a director by name</td>
-    <td>http://localhost:8080/movies/directors/:name?</td>
+    <td>http://localhost:8080/movies/directors/:directorName</td>
     <td>GET</td>
   </tr>
   <tr>
     <td>create a new user profile</td>
-    <td>http://localhost:8080/account/newuser</td>
+    <td>http://localhost:8080/users</td>
     <td>POST</td>
-  </tr>
-  <tr>
-    <td>update information for user profile</td>
-    <td>http://localhost:8080/account/update</td>
-    <td>PUT</td>
   </tr>
   <tr>
     <td>add movie to favorites in user profile</td>
-    <td>http://localhost:8080/account/forites/:title?</td>
-    <td>POST</td>
-  </tr>
-  <tr>
-    <td>removie movie from favorites in user profile</td>
-    <td>http://localhost:8080/account/favorites/:name?</td>
-    <td>DELETE</td>
-  </tr>
-  <tr>
-    <td>update information for user profile</td>
-    <td>http://localhost:8080/account/update</td>
+    <td>http://localhost:8080/users/:id/:movieTitle</td>
     <td>PUT</td>
   </tr>
   <tr>
-    <td>update information for user profile</td>
-    <td>http://localhost:8080/account/update/deactivate/:user?</td>
+    <td>remove movie from favorites in user profile</td>
+    <td>http://localhost:8080/users/:id/:movieTitle</td>
+    <td>DELETE</td>
+  </tr>
+  <tr>
+    <td>update information about user to user profile</td>
+    <td>http://localhost:8080/users/:id</td>
+    <td>PUT</td>
+  </tr>
+  <tr>
+    <td>delete user profile</td>
+    <td>http://localhost:8080/users/:id</td>
     <td>DELETE</td>
   </tr>
 </table>
