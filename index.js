@@ -59,7 +59,7 @@ app.get('/movies/:title', (req, res) => {
     const { title } = req.params;
     //find() method sits on array, applying it to the movies array. takes function as argument. 
                                //when this below true, send the value to equal movie
-    const movie = movies.find( movie => movie.Title === title )
+    const movie = movies.find( movie => movie.title === title )
     if (movie) { 
         res.status(200).json(movie);
     }else{
@@ -68,7 +68,14 @@ app.get('/movies/:title', (req, res) => {
 });
 
 app.get('/movies/:genre', (req, res) => {
-    res.send('This is the genre of the movie');
+    const { genre } = req.params;
+    const genre = movies.find( movie => movie.genre === genre).genre //this .genre at the end makes it so it ONLY returns genre information
+    
+    if (genre) { 
+        res.status(200).json(genre);
+    }else{
+        res.status(400).send('genre not found')
+    }
 });
 
 app.get('/movies/:director', (req, res) => {
