@@ -9,7 +9,7 @@ const app = express();
 app.use(morgan('common'));
 //for client adding new info: body parser allows you to read body of HTTP requests within request hanglers by using-> req.body
 app.use(bodyParser.json());
-
+//in-memory temp array
 let topMovies = [
     {
         title: 'Good Will Hunting',
@@ -52,6 +52,31 @@ app.get('/movies', (req, res) => {
 app.get('/', (req, res) => {
     res.send('These are the top 10 movies!');
 });
+
+app.get('/movies/title', (req, res) => {
+    res.send('Returning title of each movie');
+});
+
+app.get('/movies/genre', (req, res) => {
+    res.send('This is the genre of the movie');
+});
+
+app.get('/movies/director', (req, res) => {
+    res.send('This is the director of the movie');
+});
+
+app.post('/account/newuser', (req, res) => {
+    let newUser = req.body;
+
+    if(!newUser.name) {
+        const message = 'Missing "name" in request body';
+        res.status(400).send(message);
+    } else {
+        users.push(newUser);
+        res.status(201).send(newUser);
+    }
+})
+
 
 // serving all files in the public folder instead of res.sendFile() function over and over.
 app.use(express.static('public'));
