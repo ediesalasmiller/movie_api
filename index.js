@@ -82,6 +82,29 @@ app.get('/users:Username', (req, res) => {
     });
 });
 
+//UPDATE DATA IN MONGOOSE
+app.put('/users/:Username', (req, res) => {
+    Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
+      {
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+      }
+    },
+    { new: true }, // This line makes sure that the updated document is returned
+    (err, updatedUser) => {
+      if(err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
+  });
+
+
+
 
 app.get('/', (req, res) => {
     res.send('My flixdB');
@@ -204,6 +227,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
   });
 
-app.listen(8080, () => {
-    console.log('Your app is listening on port 8080.');
+app.set('port', (5000));
+app.listen(app.get('port'), () => {
+    console.log('Your app is listening on ' + app.get('port'));
   });
