@@ -1,13 +1,13 @@
 const express = require('express');
-    morgan = require('morgan');
-    bodyParser = require('body-parser');
-    uuid = require('uuid');
-    const mongoose = require('mongoose');
-    const Models = require('./models.js');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const uuid = require('uuid');
+const mongoose = require('mongoose');
+const Models = require('./models.js');
     
-    const Movies = Models.Movie;
-    const Users = Models.User;
-    mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+const Movies = Models.Movie;
+const Users = Models.User;
+mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
     
 const app = express();
 
@@ -15,76 +15,60 @@ const app = express();
 app.use(morgan('common'));
 //for client adding new info: body parser allows you to read body of HTTP requests within request hanglers by using-> req.body
 app.use(bodyParser.json());
-//in-memory temp array
 
-let users = [
-    {
-        id: 1,
-        name: "Queen",
-        favoriteMovies:[]
-    },
-    {
-        id: 2,
-        name: "Chris",
-        favoriteMovies:["Sabrina"]
-    }
-]
-let movies = [
-    {
-        "title": "Good Will Hunting",
-        "director": "Gus Van Sant",
-        "genre": "drama",
-        "description": "Will Hunting has a genius-level IQ but chooses to work as a janitor at MIT. When he solves a difficult graduate-level math problem, his talents are discovered by a professor, who decides to help the misguided youth reach his potential. When Will is arrested for attacking a police officer, the professor makes a deal to get leniency for him if he will get treatment from therapist Sean Maguire."
-    },
-    {
-        "title": "Sabrina",
-        "director": "Billy Wilder",
-        "genre": "drama-comedy",
-        "description": "A playboy becomes interested in the daughter of his family chauffeur, but it is his more serious brother who would be the better man for her."
-    },
-    {
-        "title": "Forrest Gump",
-        "director": "Robert Zemeckis",
-        "genre": "drama-comedy",
-        "description": "Forrest Gump, while not intelligent, has accidentally been present at many historic moments, but his true love, Jenny Curran, eludes him."
-    },
-    {
-        "title": "The Darjeeling Limited",
-        "director": "Wes Anderson",
-        "genre": "indie",
-        "description": "A year after the death of their father, three brothers attempt to bond with each other by traveling together by train across India."
-    },
-    {
-        "title": "Roman Holiday",
-        "director": "William Wyler",
-        "genre": "romance-comedy",
-        "description": "A runaway princess in Rome finds love with a reporter who knows her true identity."
-    },
-    
-]
 
-//CREATE
+//Add a user
+/* We’ll expect JSON in this format
+{
+  ID: Integer,
+  Username: String,
+  Password: String,
+  Email: String,
+  Birthday: Date
+}*/
+
+//POST
 app.post('/users', (req, res) => {
-    //body parser allows us to read from the body
-    const newUser = req.body;
-
-    if(!newUser.name) {
-        newUser.id = uuid.v4();
-        users.push(newUser);
-        res.status(201).json(newUser)
-    } else {
-        res.status(400)
-    }
-})
+    Users.findOne({ Username: req.body.Username })
+      .then((user) => {
+        if (user) {
+          return res.status(400).send(req.body.Username + 'already exists');
+        } else {
+          Users
+            .create({
+              Username: req.body.Username,
+              Password: req.body.Password,
+              Email: req.body.Email,
+              Birthday: req.body.Birthday
+            })
+            .then((user) =>{res.status(201).json(user) })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          })
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+      });
+  });
 
 // READ
 app.get('/', (req, res) => {
     res.send('An API of movies');
 });
 
-// GET requests, READ
+// GET requests, read, return JSON object when at /movies
 app.get('/movies', (req, res) => {
-    res.json(movies);
+    Movies.find()
+        .then((movies) => {
+            res.status(201).json(movies);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send("Error: " + err);
+        });
 });
 
 //colon becomes a property on req.params object
