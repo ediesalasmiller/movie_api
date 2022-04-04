@@ -71,10 +71,10 @@ app.get('/users', (req, res) => {
 });
 
 //get user by username
-app.get('/users:Username', (req, res) => {
+app.get('/users/:Username', (req, res) => {
     Users.findOne({ Username: req.params.Username })
-    .then((user) => {
-        res.json(user);
+    .then((users) => {
+        res.json(users);
     })
     .catch((err) => {
         console.error(err);
@@ -103,7 +103,21 @@ app.put('/users/:Username', (req, res) => {
     });
   });
 
-
+// Delete a user by username
+app.delete('/users/:Username', (req, res) => {
+    Users.findOneAndRemove({ Username: req.params.Username })
+      .then((user) => {
+        if (!user) {
+          res.status(400).send(req.params.Username + ' was not found');
+        } else {
+          res.status(200).send(req.params.Username + ' was deleted.');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
 
 
 app.get('/', (req, res) => {
@@ -122,18 +136,16 @@ app.get('/movies', (req, res) => {
         });
 });
 
-//colon becomes a property on req.params object
-app.get('/movies/:title', (req, res) => {
-    //object destructuring, creating a new variable title that is equal to the property of the same name to the object on right of equal sign.
-    const { title } = req.params;
-    //find() method sits on array, applying it to the movies array. takes function as argument. 
-                               //when this below true, send the value to equal movie
-    const movie = movies.find( movie => movie.title === title )
-    if (movie) { 
-        res.status(200).json(movie);
-    }else{
-        res.status(400).send('movie not found')
-    }
+//GET ALL MOVIES BY TITLE
+app.get('/movies/:Title', (req, res) => {
+    Movies.findOne({ Title: req.params.Title })
+    .then((movie) => {
+        res.json(movie);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
 app.get('/movies/genre/:genreName', (req, res) => {
@@ -157,23 +169,6 @@ app.get('/movies/directors/:directorName', (req, res) => {
         res.status(400).send('director not found')
     }
 });
-
-
-//UPDATE
-app.put('/users/:id', (req, res) => {
-    //body parser allows us to read from the body
-    const { id } = req.params;
-    const updatedUser = req.body;
-    
-    let user = users.find( user => user.id == id );
-
-    if (user) {
-        user.name = updatedUser.name;
-        res.status(200).json(user);
-    } else {
-        res.status(400).send('user not found');
-    }
-})
 
 
 app.put('/users/:id/:movieTitle', (req, res) => {
@@ -227,7 +222,6 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
   });
 
-app.set('port', (5000));
-app.listen(app.get('port'), () => {
-    console.log('Your app is listening on ' + app.get('port'));
-  });
+app.listen(8080), () => {
+    console.log('Your app is listening on 8080');
+  };
