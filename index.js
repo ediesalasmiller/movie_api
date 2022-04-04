@@ -32,6 +32,7 @@ app.use(bodyParser.json());
   Birthday: Date
 }*/
 
+// USERS 
 //POST
 app.post('/users', (req, res) => {
     Users.findOne({ Username: req.body.Username })
@@ -124,6 +125,23 @@ app.get('/', (req, res) => {
     res.send('My flixdB');
 });
 
+//Deregister user
+app.delete('/users/:Username', (req, res) => {
+    Users.findOneAndRemove({ Username: req.params.Username })
+    .then((user) => {
+        if (!user) {
+            res.status(400).send(req.params.Username + " was not found.");
+        } else {
+            res.status(200).send(req.params.Username + " was deleted.");
+        }
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+    });
+});
+
+//MOVIES
 // GET requests, read, return JSON object when at /movies
 app.get('/movies', (req, res) => {
     Movies.find()
@@ -148,70 +166,50 @@ app.get('/movies/:Title', (req, res) => {
     });
 });
 
-app.get('/movies/genre/:genreName', (req, res) => {
-    const { genreName } = req.params;
-    const genre = movies.find( movie => movie.genre === genreName ).genre //this .genre at the end makes it so it ONLY returns genre information
-    
-    if (genre) { 
-        res.status(200).json(genre);
-    }else{
-        res.status(400).send('genre not found')
-    }
+//search genre by name of genre
+app.get('/genre/:Name', (req, res) => {
+    Genres.findOne({ Name: HTMLTableRowElement.params.Name })
+    .then((genre) => {
+        res.json(genre.Description);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
-app.get('/movies/directors/:directorName', (req, res) => {
-    const { directorName } = req.params;
-    const director = movies.find( movie => movie.director === directorName ).director //this .genre at the end makes it so it ONLY returns genre information
-    
-    if (director) { 
-        res.status(200).json(director);
-    }else{
-        res.status(400).send('director not found')
-    }
+//get director by name of director
+app.get('/directors/:Name', (req, res) => {
+    Directors.findOne({ Name: req.params.Name })
+    .then((director) => {
+        res.json(director);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
-
-app.put('/users/:id/:movieTitle', (req, res) => {
-    //body parser allows us to read from the body
-    const { id, movieTitle } = req.params;
-    
-    let user = users.find( user => user.id == id );
-
-    if (user) {
-        user.favoriteMovies.push(movieTitle);
-        res.status(200).send(`${movieTitle} has been added`);
-    } else {
-        res.status(400).send('movie not found');
-    }
-})
-
-//DELETE
-app.delete('/users/:id/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params;
-    
-    let user = users.find( user => user.id == id );
-
-    if (user) {
-        user.favoriteMovies = user.favoriteMovies.filter(title => title !==movieTitle);
-        res.status(200).send(`${movieTitle} has been deleted`);
-    } else {
-        res.status(400).send('movie not found');
-    }
+//add favorite movie to user profile
+app.put('/users/:Username/Movies/:MovieID', (req, res) => {
+    Users.findOneAndUpdate(
+        {Username: req.params.Username},
+        {
+            $push: { FavoriteMovies: req.params.MovieID },
+        },
+        { new: true }, //this is to make sure that the updated doc is returned
+        (err, updatedUser) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
+    });
 });
-
-app.delete('/users/:id', (req, res) => {
-    const { id } = req.params;
     
-    let user = users.find( user => user.id == id );
+    
 
-    if (user) {
-        users = users.filter(user => user.id != id );
-        res.json(users)
-        //res.status(200).send(`user ${id} has been deleted`);
-    } else {
-        res.status(400).send('user not found');
-    }
-})
 
 // serving all files in the public folder instead of res.sendFile() function over and over.
 app.use(express.static('public'));

@@ -16,7 +16,7 @@ table, th, td {
     <th>Method</th>
   </tr>
   <tr>
-    <td>create new user users</td>
+    <td>create new user</td>
     <td>http://localhost:8080/users</td>
     <td>POST</td>
   </tr>
@@ -49,12 +49,12 @@ table, th, td {
   </tr>
   <tr>
     <td>return data about a genre by name/title</td>
-    <td>http://localhost:8080/movies/genre/:genreName</td>
+    <td>http://localhost:8080/genre/:Name</td>
     <td>GET</td>
   </tr>
   <tr>
     <td>return data about a director by name</td>
-    <td>http://localhost:8080/movies/directors/:directorName</td>
+    <td>http://localhost:8080/directors/:Name'</td>
     <td>GET</td>
   </tr>
   <tr>
@@ -64,22 +64,14 @@ table, th, td {
   </tr>
   <tr>
     <td>add movie to favorites in user profile</td>
-    <td>http://localhost:8080/users/:id/:movieTitle</td>
+    <td>http://localhost:8080/users/:Username/Movies/:MovieID</td>
     <td>PUT</td>
   </tr>
-  <tr>
-    <td>remove movie from favorites in user profile</td>
-    <td>http://localhost:8080/users/:id/:movieTitle</td>
-    <td>DELETE</td>
-  </tr>
-  <tr>
-    <td>update information about user to user profile</td>
-    <td>http://localhost:8080/users/:id</td>
-    <td>PUT</td>
-  </tr>
+
+
   <tr>
     <td>delete user profile</td>
-    <td>http://localhost:8080/users/:id</td>
+    <td>http://localhost:8080/users/:Username</td>
     <td>DELETE</td>
   </tr>
 </table>
