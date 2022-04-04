@@ -1,15 +1,20 @@
 const express = require('express');
-const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
+
+const morgan = require('morgan');
+const app = express();
+
 const mongoose = require('mongoose');
 const Models = require('./models.js');
     
 const Movies = Models.Movie;
 const Users = Models.User;
+const Genres = Models.Genre;
+const Directors = Models.Directors;
+
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
     
-const app = express();
 
 //firing middleware, common in parameter logs basic data
 app.use(morgan('common'));
@@ -54,9 +59,19 @@ app.post('/users', (req, res) => {
       });
   });
 
-// READ
+app.get('/users', (req, res) => {
+    Users.find()
+    .then((users) => {
+        res.status(201).json(users);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
+});
+// GET ALL USERS
 app.get('/', (req, res) => {
-    res.send('An API of movies');
+    res.send('My flixdB');
 });
 
 // GET requests, read, return JSON object when at /movies
