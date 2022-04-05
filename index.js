@@ -10,8 +10,6 @@ const Models = require('./models.js');
     
 const Movies = Models.Movie;
 const Users = Models.User;
-const Genres = Models.Genre;
-const Directors = Models.Directors;
 
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
     
@@ -168,9 +166,9 @@ app.get('/movies/:Title', (req, res) => {
 
 //search genre by name of genre
 app.get('/genre/:Name', (req, res) => {
-    Genres.findOne({ Name: req.params.Name })
-    .then((genre) => {
-        res.json(genre.Description);
+    Movies.findOne({ "Genre.Name": req.params.Name })
+    .then((movie) => {
+        res.json(movie.Genre);
     })
     .catch((err) => {
         console.error(err);
@@ -180,9 +178,9 @@ app.get('/genre/:Name', (req, res) => {
 
 //get director by name of director
 app.get('/directors/:Name', (req, res) => {
-    Directors.findOne({ Name: req.params.Name })
-    .then((director) => {
-        res.json(director);
+    Movies.findOne({ "Directors.Name": req.params.Name })
+    .then((movie) => {
+        res.json(movie.Director);
     })
     .catch((err) => {
         console.error(err);
