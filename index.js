@@ -168,7 +168,7 @@ app.get('/movies/:Title', (req, res) => {
 
 //search genre by name of genre
 app.get('/genre/:Name', (req, res) => {
-    Genres.findOne({ Name: HTMLTableRowElement.params.Name })
+    Genres.findOne({ Name: req.params.Name })
     .then((genre) => {
         res.json(genre.Description);
     })
