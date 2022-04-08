@@ -22,7 +22,6 @@ app.use(bodyParser.json()); //for client adding new info: body parser allows you
 app.use(bodyParser.urlencoded({ extended: true }));
 
 let auth = require('./auth')(app);
-
 const passport = require('passport');
 require('./passport');
 
