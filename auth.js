@@ -1,6 +1,5 @@
 const jwtSecret = 'your_jwt_secret'; //this must be same key used in JWTStrategy
 
-const { route } = require('express/lib/router');
 const jwt = require('jsonwebtoken'),
     passport = require('passport');
 
