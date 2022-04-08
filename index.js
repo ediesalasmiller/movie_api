@@ -14,27 +14,18 @@ const Users = Models.User;
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
     
 
-//firing middleware, common in parameter logs basic data
-app.use(morgan('common'));
-//for client adding new info: body parser allows you to read body of HTTP requests within request hanglers by using-> req.body
-app.use(bodyParser.json());
+app.use(morgan('common')); //firing middleware, common in parameter logs basic data
+
+app.use(bodyParser.json()); //for client adding new info: body parser allows you to read body of HTTP requests within request hanglers by using-> req.body
 
 //adding the auth.js to our project. need to be AFTER middleware.
 app.use(bodyParser.urlencoded({ extended: true }));
 
 let auth = require('./auth')(app);
-//requiring passport module after auth.js
+
 const passport = require('passport');
 require('./passport');
-//Add a user
-/* We’ll expect JSON in this format
-{
-  ID: Integer,
-  Username: String,
-  Password: String,
-  Email: String,
-  Birthday: Date
-}*/
+
 
 // USERS 
 //POST
@@ -63,6 +54,34 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
         res.status(500).send('Error: ' + error);
       });
   });
+
+
+//CREATE Movie
+app.post('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+  Movies.findOne({ Title: req.body.Title })
+    .then((movie) => {
+      if (movie) {
+        return res.status(400).send(req.body.Title + 'already exists');
+      } else {
+        Movies
+          .create({
+            Title: req.body.Title,
+            Description: req.body.Description,
+            Genre: req.body.Genre.Name,
+            Director: req.body.Director.Name,
+          })
+          .then((user) => { res.status(201).json(user) })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          })
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
+});
 
 app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.find()
