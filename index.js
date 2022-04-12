@@ -14,8 +14,10 @@ const Users = Models.User;
 const { check, validationResult } = require('express-validator');
 
 // mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connect( process.env.CONNECTION_URI , { useNewUrlParser: true, useUnifiedTopology: true });
-    
+mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 app.use(morgan('common')); //firing middleware, common in parameter logs basic data
 
@@ -23,23 +25,25 @@ app.use(bodyParser.json()); //for client adding new info: body parser allows you
 
 //adding the auth.js to our project. need to be AFTER middleware.
 app.use(bodyParser.urlencoded({ extended: true }));
-const cors = require('cors');
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
-      let message = 'The CORS policy for this application doesnt allow access from origin ' + origin;
-      return callback(new Error(message ), false);
-    }
-    return callback(null, true);
-  }
-}));
+const cors = require('cors');
+
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     if(!origin) return callback(null, true);
+//     if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
+//       let message = 'The CORS policy for this application doesnt allow access from origin ' + origin;
+//       return callback(new Error(message ), false);
+//     }
+//     return callback(null, true);
+//   }
+// }));
 
 let auth = require('./auth')(app);
+
 const passport = require('passport');
 require('./passport');
+
 
 
 // USERS 
@@ -53,10 +57,10 @@ app.post('/users',
 ], (req, res) => {
   //check validation object for errors
   let errors = validationResult(req);
-
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
   }
+  
   let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username }) //Search to see if a user with the requested username already exists
       .then((user) => {
