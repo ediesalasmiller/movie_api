@@ -43,7 +43,19 @@ require('./passport');
 
 // USERS 
 
-app.post('/users', (req, res) => {
+app.post('/users', 
+[
+  check('Username', 'Username is required').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail()
+], (req, res) => {
+  //check validation object for errors
+  let errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
   let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username }) //Search to see if a user with the requested username already exists
       .then((user) => {
@@ -259,6 +271,8 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
   });
 
-app.listen(8080), () => {
-    console.log('Your app is listening on 8080');
-  };
+  //heroku listen
+const port = process.env.PORT || 8080;
+  app.listen(port, '0.0.0.0',() => {
+   console.log('Listening on Port ' + port);
+  });
