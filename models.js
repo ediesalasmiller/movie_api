@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 let movieSchema = mongoose.Schema({
     Title: {type: String, required: true},
@@ -24,6 +25,15 @@ let userSchema = mongoose.Schema({
     FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
 });
 
+//hashPassword function, hashes the password
+userSchema.stastics.hashPassword = (password) => {
+    return bcrypt.hashSync(password, 10);
+};
+
+//validatePassword function conpares submitted hased passwords with the hashed passwords stored in db
+userSchema.methods.validatePassword = function(password) {
+    return bcrypt.compareSync(password, this.Password);
+};
 //below code will create collections called "db.movies" and "db.users"
 let Movie = mongoose.model('Movie', movieSchema);
 let User = mongoose.model('User', userSchema);

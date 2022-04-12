@@ -11,6 +11,8 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
+const { check, validationResult } = require('express-validator');
+
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
     
 
@@ -20,6 +22,19 @@ app.use(bodyParser.json()); //for client adding new info: body parser allows you
 
 //adding the auth.js to our project. need to be AFTER middleware.
 app.use(bodyParser.urlencoded({ extended: true }));
+const cors = require('cors');
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
+      let message = 'The CORS policy for this application doesnt allow access from origin ' + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 let auth = require('./auth')(app);
 const passport = require('passport');
@@ -27,17 +42,19 @@ require('./passport');
 
 
 // USERS 
-//POST
-app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOne({ Username: req.body.Username })
+
+app.post('/users', (req, res) => {
+  let hashedPassword = Users.hashPassword(req.body.Password);
+    Users.findOne({ Username: req.body.Username }) //Search to see if a user with the requested username already exists
       .then((user) => {
         if (user) {
+          //if the user is found , send response that is exists
           return res.status(400).send(req.body.Username + 'already exists');
         } else {
           Users
             .create({
               Username: req.body.Username,
-              Password: req.body.Password,
+              Password: hashedPassword,
               Email: req.body.Email,
               Birthday: req.body.Birthday
             })
@@ -81,6 +98,7 @@ app.post('/movies', passport.authenticate('jwt', { session: false }), (req, res)
       res.status(500).send('Error: ' + error);
     });
 });
+
 
 app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.find()
