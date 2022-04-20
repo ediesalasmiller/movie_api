@@ -17,67 +17,63 @@ table, th, td {
   </tr>
   <tr>
     <td>create new user</td>
-    <td>http://localhost:8080/users</td>
+    <td>/users</td>
     <td>POST</td>
+    <td>returns JSON style array with Username,Password(hashed), favorite movies array, unique ID </td>
   </tr>
   <tr>
-    <td>return all users</td>
-    <td>http://localhost:8080/users</td>
+    <td>return array containing all users created(auth token needed)</td>
+    <td>/users</td>
     <td>GET</td>
   </tr>
   <tr>
-    <td>return one user by username </td>
-    <td>http://localhost:8080/users/:Username</td>
+    <td>return one user by username(auth token needed)</td>
+    <td>/users/:Username</td>
     <td>GET</td>
   </tr>
   <tr>
-    <td>update user by username </td>
-    <td>http://localhost:8080/users/:Username</td>
+    <td>update user by username (auth token needed) </td>
+    <td>/users/:Username</td>
     <td>PUT</td>
   </tr>
 
 
   <tr>
     <td>return all movies in API in a list</td>
-    <td>http://localhost:8080/movies</td>
+    <td>/movies</td>
     <td>GET</td>
   </tr>
   <tr>
     <td>Return data about a single movie</td>
-    <td>http://localhost:8080/movies/:title</td>
+    <td>/movies/:title</td>
     <td>GET</td>
   </tr>
   <tr>
-    <td>return data about a genre by name/title</td>
-    <td>http://localhost:8080/genre/:Name</td>
+    <td>return description about a genre by name/title</td>
+    <td>/genre/:Name</td>
     <td>GET</td>
   </tr>
   <tr>
     <td>return data about a director by name</td>
-    <td>http://localhost:8080/directors/:Name'</td>
+    <td>/directors/:Name'</td>
     <td>GET</td>
   </tr>
   <tr>
-    <td>create a new user profile</td>
-    <td>http://localhost:8080/users</td>
-    <td>POST</td>
-  </tr>
-  <tr>
-    <td>add movie to favorites in user profile</td>
-    <td>http://localhost:8080/users/:Username/Movies/:MovieID</td>
+    <td>add movie to favorites in user profile, return array of favorite movies in JSON format</td>
+    <td>/users/:Username/Movies/:MovieID</td>
     <td>PUT</td>
   </tr>
 
 
   <tr>
     <td>delete user profile</td>
-    <td>http://localhost:8080/users/:Username</td>
+    <td>/users/:Username</td>
     <td>DELETE</td>
   </tr>
 
   <tr>
-    <td>login</td>
-    <td>http://localhost:8080/login</td>
+    <td>login and recieved authorization bearer token to access information within the API</td>
+    <td>/login</td>
     <td>POST</td>
   </tr>
 </table>
