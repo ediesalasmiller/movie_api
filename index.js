@@ -22,6 +22,13 @@ mongoose.connect( process.env.CONNECTION_URI, {
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require('cors');
+let allowedOrigins = [
+    "http://localhost:1234",
+    "https://ediesalasmiller.github.io/MyFlixClient/",
+    "https://edieflixdb.herokuapp.com/movies",
+    "https://edieflixdb.herokuapp.com/"
+
+];
 app.use(cors());
 
 let auth = require('./auth')(app);
@@ -39,7 +46,7 @@ app.use(bodyParser.json()); //for client adding new info: body parser allows you
 
 // Requests
 // Get a list of all movies
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
       .then((movies) => {
           res.status(201).json(movies);
