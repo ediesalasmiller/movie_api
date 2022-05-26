@@ -7,9 +7,12 @@ const app = express();
 
 const mongoose = require('mongoose');
 const Models = require('./models.js');    
+
+
 const Movies = Models.Movie;
 const Users = Models.User;
 const { check, validationResult } = require('express-validator');
+
 
 
 // mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -22,16 +25,18 @@ mongoose.connect( process.env.CONNECTION_URI, {
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require('cors');
+
 let allowedOrigins = [
     "http://localhost:1234",
     "https://ediesalasmiller.github.io/MyFlixClient/",
     "https://edieflixdb.herokuapp.com/movies",
-    "https://edieflixdb.herokuapp.com/"
-
+    "https://edieflixdb.herokuapp.com/",
+    "https://edieflixdb.herokuapp.com/login"
+   
 ];
 app.use(cors());
 
-let auth = require('./auth')(app);
+let auth = require('./auth')(app); //app argument ensures that Express is available in your “auth.js” file too
 
 const passport = require('passport');
 require('./passport');
@@ -55,10 +60,6 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
           console.error(err);
           res.status(500).send('Error: ' + err);
       });
-});
-
-app.get('/', (req, res) => {
-  res.send('Check out these movies!');
 });
 
 // Get a movie by Title
