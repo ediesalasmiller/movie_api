@@ -21,8 +21,7 @@ mongoose.connect( process.env.CONNECTION_URI, {
   useUnifiedTopology: true
 });
 
-//adding the auth.js to our project. need to be AFTER middleware.
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); //for client adding new info: body parser allows you to read body of HTTP requests within request hanglers by using-> req.body
 
 const cors = require('cors');
 
@@ -42,12 +41,6 @@ const passport = require('passport');
 require('./passport');
 
 app.use(morgan('common')); //firing middleware, common in parameter logs basic data
-
-app.use(bodyParser.json()); //for client adding new info: body parser allows you to read body of HTTP requests within request hanglers by using-> req.body
-
-
-
-
 
 // Requests
 // Get a list of all movies
