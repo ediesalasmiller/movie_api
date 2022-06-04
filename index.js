@@ -201,6 +201,17 @@ app.delete('/users/:Username/favorites/:MovieID', passport.authenticate('jwt', {
   });
 });
 
+app.get('/users/:Username', (req, res) => {
+Users.findOne({ Username: req.params.Username })
+.then((user) => {
+res.json(user);
+})
+.catch((err) => {
+console.error(err);
+res.status(500).send('Error:' + err);
+});
+});
+
 // Delete a user by username
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
